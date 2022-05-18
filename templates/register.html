@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{% block title %} Регистрация {% endblock %}</h2>
+{% for cat, msg in get_flashed_messages(True) %}
+{% endfor %}
+<p>Для регистрации заполните более 4 символами каждое поле.</p>
+<form action="/register" method="post" class="form-contact">
+<p><label>Имя: </label> <input type="text" name="name" value="" requied />
+<p><label>Email: </label> <input type="text" name="email" value="" requied />
+<p><label>Пароль: </label> <input type="password" name="psw" value="" requied />
+<p><label>Повтор пароля: </label> <input type="password" name="psw2" value="" requied />
+<p><input type="submit" value="Регистрация" />
+</form>
+{% endblock %}
