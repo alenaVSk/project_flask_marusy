@@ -23,7 +23,7 @@
                 <a class="nav-link" href="{{url_for('create')}}">Новый пост</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('login')}}">Авторизация</a>
+                <a class="nav-link" href="{{ url_for('profile')}}">{% block key_user %}{% endblock %}</a>
             </li>
             </ul>
         </div>

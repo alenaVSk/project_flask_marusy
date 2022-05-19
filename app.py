@@ -30,23 +30,39 @@ def load_user(user_id):
     return UserLogin().fromDB(user_id)
 
 
+def choose_key_user():
+    if current_user.is_authenticated:
+        key_user = "Профиль"
+    else:
+        key_user = "Авторизация"
+
+    return key_user
+
+
 @app.route('/')  # просмотр домашней страницы (все посты)
 def index():
     conn = con_db.get_db_connection()
     posts = conn.execute('SELECT * FROM posts').fetchall()
     conn.close()
-    return render_template('index.html', posts=posts)
+
+    key_user = choose_key_user()
+
+    return render_template('index.html', posts=posts, key_user=key_user)
 
 
 @app.route('/about')  # страница о сайте
 def about():
-    return render_template('about.html')
+    key_user = choose_key_user()
+
+    return render_template('about.html', key_user=key_user)
 
 
 @app.route('/<int:post_id>')  # просмотр поста по ID
 def post(post_id):
+    key_user = choose_key_user()
     post_t = get_post(post_id)
-    return render_template('post.html', post=post_t)
+
+    return render_template('post.html', post=post_t, key_user=key_user)
 
 
 @app.route('/create', methods=('GET', 'POST'))  # создание нового поста(показывает форму для заполнения)
@@ -66,7 +82,9 @@ def create():
             conn.close()
             return redirect(url_for('index'))
 
-    return render_template('create.html')
+    key_user = choose_key_user()
+
+    return render_template('create.html', key_user=key_user)
 
 
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))  # редактирование поста
@@ -88,7 +106,9 @@ def edit(id):
             conn.close()
             return redirect(url_for('index'))
 
-    return render_template('edit.html', post=post)
+    key_user = choose_key_user()
+
+    return render_template('edit.html', post=post, key_user=key_user)
 
 
 @app.route('/<int:id>/delete', methods=('POST',))  # удаление поста
@@ -118,7 +138,9 @@ def login():
 
         flash("Неверная пара логин/пароль", "error")
 
-    return render_template("login.html")
+    key_user = choose_key_user()
+
+    return render_template("login.html", key_user=key_user)
 
 
 @app.route("/register", methods=["POST", "GET"])  # обработчик для регистрации пользователя
@@ -129,6 +151,12 @@ def register():
                 and len(request.form['psw']) > 4 and request.form['psw'] == request.form['psw2']:
             hash = generate_password_hash(request.form['psw'])
             res = addUser(request.form['name'], request.form['email'], hash)
+
+            user = getUserByEmail(request.form['email'])
+            userlogin = UserLogin().create(user)
+            rm = True if request.form.get('remainme') else False
+            login_user(userlogin, remember=rm)
+
             if res:
                 flash("Вы успешно зарегистрированы", "success")
                 return redirect(url_for('index'))  # было перенаправление на 'login'
@@ -136,7 +164,10 @@ def register():
                 flash("Ошибка при добавлении в БД", "error")
         else:
             flash("Неверно заполнены поля", "error")
-    return render_template("register.html")
+
+    key_user = choose_key_user()
+
+    return render_template("register.html", key_user=key_user)
 
 
 @app.route('/logout')   # выход из профиля
@@ -147,11 +178,16 @@ def logout():
 
 
 @app.route('/profile')   # страница профиля
+@login_required   # страница доступна только авторизованным пользователям
 def profile():
-    return f"""<p>{'Имя : '} {current_user.name_id()}</p>
-               <p>{'Email : '} {current_user.email_id()}</p>
-               <p><a href="{url_for('logout')}">Выйти из профиля</a>"""
+    info = {
+        'name_id': current_user.name_id(),
+        'email_id': current_user.email_id(),
+        'key_user': choose_key_user(),
+    }
+
+    return render_template('profile.html', info=info)
 
 
-#if __name__ == "__main__":
-    #app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)

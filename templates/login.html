@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block key_user %} {{ key_user }} {% endblock %}
+
 {% block content %}
 <h2>{% block title %} Авторизация {% endblock %}</h2>
 {% for cat, msg in get_flashed_messages(True) %}
