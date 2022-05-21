@@ -6,6 +6,7 @@
 <h2>{% block title %} Регистрация {% endblock %}</h2>
 {% for cat, msg in get_flashed_messages(True) %}
 {% endfor %}
+
 <p>Для регистрации заполните более 4 символами каждое поле.</p>
 <form action="/register" method="post" class="form-contact">
 <p><label>Имя: </label> <input type="text" name="name" value="" requied />

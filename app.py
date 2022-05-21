@@ -18,6 +18,8 @@ def get_post(post_id):   # вызов поста блога по ID
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+app.config['MAX_CONTENT_LENGTH'] = 4 * 512 * 512
+
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -73,7 +75,7 @@ def create():
         content = request.form['content']
 
         if not title:
-            flash('Title is required!')
+            flash('Название обязательно!')
         else:
             conn = con_db.get_db_connection()
             conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
@@ -119,7 +121,7 @@ def delete(id):
     conn.execute('DELETE FROM posts WHERE id = ?', (id,))
     conn.commit()
     conn.close()
-    flash('"{}" was successfully deleted!'.format(post['title']))
+    flash('"{}" был успешно удалён!'.format(post['title']))
     return redirect(url_for('index'))
 
 

@@ -7,7 +7,6 @@
 
 <form method="post">
     <div class="form-group">
-        <label for="title">Заголовок</label>
         <input type="text" name="title" placeholder="Post title"
                class="form-control"
                value="{{ request.form['title'] or post['title'] }}">
@@ -15,7 +14,6 @@
     </div>
 
     <div class="form-group">
-        <label for="content">Содержание</label>
         <textarea name="content" placeholder="Post content"
                   class="form-control">{{ request.form['content'] or post['content'] }}</textarea>
     </div>

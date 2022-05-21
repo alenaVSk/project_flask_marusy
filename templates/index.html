@@ -5,6 +5,8 @@
 {% block content %}
     <h1>{% block title %} Добро пожаловать в Марусин Блог! {% endblock %} </h1>
 
+    <p class="fig"><img src="{{ url_for('static', filename='images/001.jpg') }}" class="photo" /></p>
+
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
     <br>
     {% for post in posts %}
