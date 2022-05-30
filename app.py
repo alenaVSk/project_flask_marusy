@@ -6,7 +6,7 @@ from UserLogin import UserLogin, getUserByEmail, addUser
 import connect_db as con_db
 
 
-def get_post(post_id):   # вызов поста блога по ID
+def get_post(post_id):   # вызов поста по ID
     conn = con_db.get_db_connection()
     post = conn.execute('SELECT * FROM posts WHERE id = ?',
                         (post_id,)).fetchone()
@@ -17,7 +17,7 @@ def get_post(post_id):   # вызов поста блога по ID
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your secret key'
+app.config['SECRET_KEY'] = 'lUhj7dHS4ldiEYkkKHgs8lAse'
 app.config['MAX_CONTENT_LENGTH'] = 4 * 512 * 512
 
 
@@ -161,7 +161,7 @@ def register():
 
             if res:
                 flash("Вы успешно зарегистрированы", "success")
-                return redirect(url_for('index'))  # было перенаправление на 'login'
+                return redirect(url_for('index'))
             else:
                 flash("Ошибка при добавлении в БД", "error")
         else:
@@ -192,4 +192,5 @@ def profile():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
+
